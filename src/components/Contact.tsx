@@ -71,7 +71,7 @@ export default function Contact() {
               href="mailto:reactjsdeveloper45@gmail.com"
               className="group relative inline-block"
             >
-              <div className="text-2xl md:text-3xl font-display font-black text-text border-b border-dashed border-accent/30 pb-2 hover:border-accent hover:text-accent transition-all duration-300">
+              <div className="text-2xl md:text-3xl font-display font-black text-text border-b border-dashed border-accent/30 pb-2 hover:border-accent hover:text-accent transition-all duration-300 break-all">
                 reactjsdeveloper45@gmail.com
               </div>
               <div className="absolute -bottom-1 left-0 h-px bg-accent w-0 group-hover:w-full transition-all duration-500" />
@@ -91,11 +91,11 @@ export default function Contact() {
                 key={link.label}
                 href={link.href}
                 target={link.href.startsWith('http') ? '_blank' : undefined}
-                className="card-glow bg-surface p-4 flex flex-col items-center gap-2 group"
+                className="card-glow bg-surface p-4 flex flex-col items-center gap-2 group w-full overflow-hidden"
               >
                 <span className="text-2xl group-hover:scale-110 transition-transform">{link.icon}</span>
                 <span className="font-mono text-xs text-accent tracking-widest">{link.label}</span>
-                <span className="font-mono text-[10px] text-muted text-center">{link.value}</span>
+                <span className="font-mono text-[10px] text-muted text-center truncate w-full">{link.value}</span>
               </a>
             ))}
           </div>

@@ -137,7 +137,7 @@ export default function Experience() {
 
         <div className="reveal grid md:grid-cols-[280px,1fr] gap-0">
           {/* Sidebar tabs */}
-          <div className="flex md:flex-col overflow-x-auto md:overflow-visible border-b md:border-b-0 md:border-r border-border">
+          <div className="no-scrollbar flex md:flex-col overflow-x-auto md:overflow-visible border-b md:border-b-0 md:border-r border-border">
             {experiences.map((e, i) => (
               <button
                 key={i}
@@ -163,10 +163,9 @@ export default function Experience() {
                   {exp.type}
                 </span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-1 flex-wrap">
                 <span className="font-mono text-sm" style={{ color: exp.color }}>@ {exp.company}</span>
-                <span className="font-mono text-xs text-muted">• {exp.location}</span>
-                <span className="font-mono text-xs text-muted">• {exp.period}</span>
+                <span className="font-mono text-xs text-muted">• {exp.location} • {exp.period}</span>
               </div>
             </div>
 

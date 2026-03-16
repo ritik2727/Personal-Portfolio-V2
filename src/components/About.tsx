@@ -116,7 +116,7 @@ export default function About() {
             </div>
 
             {/* Quick facts */}
-            <div className="reveal grid grid-cols-2 gap-3 pt-4">
+            <div className="reveal grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
               {[
                 { label: 'Location', value: 'Indore, India' },
                 { label: 'Experience', value: '2.5+ Years' },
