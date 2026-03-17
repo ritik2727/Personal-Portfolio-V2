@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 
 /* ── Category SVG Icons ── */
 const IconFrontend = () => (
@@ -20,43 +20,53 @@ const IconTools = () => (
   </svg>
 )
 
+/* ── Proficiency config ── */
+type Proficiency = 'Expert' | 'Advanced' | 'Proficient' | 'Familiar'
+
+const proficiencyConfig: Record<Proficiency, { color: string; bg: string; dots: number }> = {
+  Expert:     { color: '#00ff87', bg: 'rgba(0,255,135,0.12)', dots: 4 },
+  Advanced:   { color: '#60efff', bg: 'rgba(96,239,255,0.12)', dots: 3 },
+  Proficient: { color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', dots: 2 },
+  Familiar:   { color: '#94a3b8', bg: 'rgba(148,163,184,0.10)', dots: 1 },
+}
+
 const skillGroups = [
   {
     category: 'Frontend',
     icon: <IconFrontend />,
     skills: [
-      { name: 'React.js', level: 95 },
-      { name: 'Next.js', level: 90 },
-      { name: 'TypeScript', level: 85 },
-      { name: 'Redux', level: 94 },
-      { name: 'Tailwind CSS', level: 92 },
-      { name: 'Material UI', level: 82 },
-      { name: 'React Native', level: 75 },
-      { name: 'JavaScript ES6+', level: 95 },
+      { name: 'React.js',        level: 'Expert'     as Proficiency },
+      { name: 'JavaScript ES6+', level: 'Expert'     as Proficiency },
+      { name: 'Next.js',         level: 'Advanced'   as Proficiency },
+      { name: 'Redux',           level: 'Advanced'   as Proficiency },
+      { name: 'TypeScript',      level: 'Advanced'   as Proficiency },
+      { name: 'Tailwind CSS',    level: 'Advanced'   as Proficiency },
+      { name: 'Material UI',     level: 'Proficient' as Proficiency },
+      { name: 'React Native',    level: 'Proficient' as Proficiency },
     ]
   },
   {
     category: 'Backend',
     icon: <IconBackend />,
     skills: [
-      { name: 'Node.js', level: 88 },
-      { name: 'Express.js', level: 90 },
-      { name: 'MongoDB', level: 82 },
-      { name: 'Mongoose', level: 80 },
-      { name: 'Firebase', level: 78 },
-      { name: 'PostgreSQL', level: 75 },
+      { name: 'Node.js',    level: 'Advanced'   as Proficiency },
+      { name: 'Express.js', level: 'Advanced'   as Proficiency },
+      { name: 'MongoDB',    level: 'Advanced'   as Proficiency },
+      { name: 'Mongoose',   level: 'Proficient' as Proficiency },
+      { name: 'PostgreSQL', level: 'Proficient' as Proficiency },
+      { name: 'Firebase',   level: 'Proficient' as Proficiency },
     ]
   },
   {
     category: 'Tools & Others',
     icon: <IconTools />,
     skills: [
-      { name: 'Git / GitHub', level: 90 },
-      { name: 'Postman', level: 88 },
-      { name: 'Vercel', level: 85 },
-      { name: 'Docker', level: 75 },
-      { name: 'Agile / Scrum', level: 80 },
-      { name: 'CI/CD', level: 78 },
+      { name: 'Git / GitHub',  level: 'Advanced'   as Proficiency },
+      { name: 'Postman',       level: 'Advanced'   as Proficiency },
+      { name: 'Vercel',        level: 'Advanced'   as Proficiency },
+      { name: 'Agile / Scrum', level: 'Proficient' as Proficiency },
+      { name: 'CI/CD',         level: 'Proficient' as Proficiency },
+      { name: 'Docker',        level: 'Familiar'   as Proficiency },
     ]
   }
 ]
@@ -67,36 +77,36 @@ const techStack = [
   'Firebase', 'PostgreSQL', 'Docker', 'Agile', 'Scrum', 'Mongoose', 'Postman',
 ]
 
-function SkillBar({ name, level, delay }: { name: string; level: number; delay: number }) {
-  const barRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting && barRef.current) {
-          const fill = barRef.current.querySelector('.fill') as HTMLElement
-          if (fill) {
-            fill.style.width = `${level}%`
-            fill.style.transition = `width 1.2s ease ${delay}ms`
-          }
-        }
-      })
-    }, { threshold: 0.3 })
-    if (barRef.current) observer.observe(barRef.current)
-    return () => observer.disconnect()
-  }, [level, delay])
-
+function SkillChip({ name, level }: { name: string; level: Proficiency }) {
+  const cfg = proficiencyConfig[level]
   return (
-    <div ref={barRef} className="group">
-      <div className="flex justify-between items-center mb-1.5">
-        <span className="font-mono text-xs text-text">{name}</span>
-        <span className="font-mono text-xs text-accent">{level}%</span>
-      </div>
-      <div className="h-1 bg-border rounded-full overflow-hidden">
-        <div
-          className="fill h-full rounded-full bg-gradient-to-r from-accent to-accent-2"
-          style={{ width: 0, boxShadow: '0 0 8px rgba(0,255,135,0.5)' }}
-        />
+    <div
+      className="flex items-center justify-between px-3 py-2 rounded-lg border transition-all duration-200 hover:scale-[1.02] group"
+      style={{
+        borderColor: `${cfg.color}22`,
+        background: cfg.bg,
+      }}
+    >
+      <span className="font-mono text-xs text-text group-hover:text-white transition-colors">{name}</span>
+      <div className="flex items-center gap-1.5 ml-3">
+        <div className="flex gap-0.5">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span
+              key={i}
+              className="block w-1.5 h-1.5 rounded-full transition-all duration-300"
+              style={{
+                background: i < cfg.dots ? cfg.color : 'rgba(255,255,255,0.1)',
+                boxShadow: i < cfg.dots ? `0 0 4px ${cfg.color}` : 'none',
+              }}
+            />
+          ))}
+        </div>
+        <span
+          className="font-mono text-[10px] tracking-wide ml-1"
+          style={{ color: cfg.color }}
+        >
+          {level}
+        </span>
       </div>
     </div>
   )
@@ -120,6 +130,7 @@ export default function Skills() {
     <section id="skills" ref={sectionRef} className="py-32 relative bg-surface">
       <div className="absolute inset-0 grid-bg opacity-50" />
       <div className="relative max-w-7xl mx-auto px-6">
+
         {/* Header */}
         <div className="reveal flex items-center gap-4 mb-20">
           <span className="font-mono text-accent text-sm">02.</span>
@@ -127,9 +138,31 @@ export default function Skills() {
           <div className="flex-1 h-px bg-border max-w-xs" />
         </div>
 
+        {/* Legend */}
+        <div className="reveal flex flex-wrap items-center gap-4 mb-10">
+          <span className="font-mono text-xs text-muted tracking-widest uppercase">// proficiency</span>
+          {(Object.entries(proficiencyConfig) as [Proficiency, typeof proficiencyConfig[Proficiency]][]).map(([label, cfg]) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <div className="flex gap-0.5">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className="block w-1.5 h-1.5 rounded-full"
+                    style={{
+                      background: i < cfg.dots ? cfg.color : 'rgba(255,255,255,0.1)',
+                      boxShadow: i < cfg.dots ? `0 0 4px ${cfg.color}` : 'none',
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="font-mono text-[11px]" style={{ color: cfg.color }}>{label}</span>
+            </div>
+          ))}
+        </div>
+
         {/* Skill groups */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {skillGroups.map((group, gi) => (
+          {skillGroups.map((group) => (
             <div key={group.category} className="reveal card-glow bg-bg p-6">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
                 <span className="text-xl">{group.icon}</span>
@@ -137,9 +170,9 @@ export default function Skills() {
                   <div className="font-mono text-xs text-accent tracking-widest uppercase">{group.category}</div>
                 </div>
               </div>
-              <div className="space-y-4">
-                {group.skills.map((skill, si) => (
-                  <SkillBar key={skill.name} name={skill.name} level={skill.level} delay={gi * 100 + si * 80} />
+              <div className="space-y-2.5">
+                {group.skills.map((skill) => (
+                  <SkillChip key={skill.name} name={skill.name} level={skill.level} />
                 ))}
               </div>
             </div>
@@ -157,6 +190,7 @@ export default function Skills() {
             </div>
           </div>
         </div>
+
       </div>
     </section>
   )
